@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_1_0/addPage.dart';
+import 'addPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,64 +10,121 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: AddPage(),
+      debugShowCheckedModeBanner: false,
+      home: const MyHomePage(title: 'To Do List'),
     );
   }
+}
+
+class Note {
+  final String title;
+  final Color color;
+
+  Note({required this.title, required this.color});
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StatefulWidget> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final List<Note> notes = [];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void navigateToAddPage() {
-    Navigator.push(
+  void navigateToAddPage(BuildContext context) async {
+    final Note? newNote = await Navigator.of(
       context,
-      MaterialPageRoute(builder: (context) => AddPage()),
-    );
+    ).push(MaterialPageRoute(builder: (_) => const AddPage()));
+
+    if (newNote != null) {
+      setState(() {
+        notes.add(newNote);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        leading: TextButton(
+          onPressed: () {},
+          child: const Text("Label", style: TextStyle(fontSize: 12)),
+        ),
+        title: const Text("Title"),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+        ],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
-          mainAxisAlignment: .center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            TextField(
+              decoration: InputDecoration(
+                hintText: "Search",
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: const Icon(Icons.mic),
+                fillColor: Colors.grey[100],
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Text(
+                "Notes",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              ),
+            ),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1.5,
+                ),
+                itemCount: notes.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: notes[index].color,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Text(
+                      notes[index].title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: navigateToAddPage,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.redAccent,
+        shape: const CircleBorder(),
+        onPressed: () => navigateToAddPage(context),
+        child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

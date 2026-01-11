@@ -56,33 +56,13 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        leading: TextButton(
-          onPressed: () {},
-          child: const Text("Label", style: TextStyle(fontSize: 12)),
-        ),
         title: const Text("Title"),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: "Search",
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: const Icon(Icons.mic),
-                fillColor: Colors.grey[100],
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20.0),
               child: Text(

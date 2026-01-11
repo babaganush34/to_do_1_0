@@ -3,31 +3,43 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({super.key});
+  final Note? note;
+
+  const AddPage({super.key, this.note});
 
   @override
   State<AddPage> createState() => _AddPageState();
 }
 
 class _AddPageState extends State<AddPage> {
-  final titleController = TextEditingController();
-  final contentController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController contentController;
   final List<Color> colors = [
-    const Color(0xFFE1BEE7), 
-    const Color(0xFFE0F2F1), 
-    const Color(0xFFE1F5FE), 
-    const Color(0xFFFFF9C4), 
-    const Color(0xFFFFEBEE), 
-    const Color(0xFFD7CCC8), 
+    const Color(0xFFE1BEE7),
+    const Color.fromARGB(255, 37, 133, 34),
+    const Color(0xFFE1F5FE),
+    const Color(0xFFFFF9C4),
+    const Color.fromARGB(255, 255, 0, 38),
+    const Color.fromARGB(255, 169, 120, 102),
   ];
 
   Color selectedColor = const Color(0xFFE1BEE7);
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.note?.title ?? "");
+    contentController = TextEditingController(text: widget.note?.content ?? "");
+    selectedColor = widget.note?.color ?? const Color(0xFFE1BEE7);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("New Note"), backgroundColor: Colors.white,),
+      appBar: AppBar(
+        title: const Text("New Note"),
+        backgroundColor: const Color.fromARGB(255, 118, 118, 118),
+        foregroundColor: Colors.white,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -41,7 +53,9 @@ class _AddPageState extends State<AddPage> {
                 border: InputBorder.none,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
+            const Divider(color: Colors.black,),
+            const SizedBox(height: 5),
             Expanded(
               child: TextField(
                 controller: contentController,

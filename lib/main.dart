@@ -54,23 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        title: const Text("Title"),
+        backgroundColor: const Color.fromARGB(255, 118, 118, 118),
+        foregroundColor: Colors.white,
+        title: const Text(
+          "NOTES",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0),
-              child: Text(
-                "Notes",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-            ),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -123,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: const Color.fromARGB(255, 118, 118, 118),
         shape: const CircleBorder(),
         onPressed: () => navigateToAddPage(context),
         child: const Icon(Icons.add, color: Colors.white, size: 30),
@@ -139,6 +134,10 @@ class _MyHomePageState extends State<MyHomePage> {
     if (result == 'delete') {
       setState(() {
         notes.removeAt(index);
+      });
+    } else if (result is Note) {
+      setState(() {
+        notes[index] = result;
       });
     }
   }

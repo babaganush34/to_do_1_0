@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'To Do List'),
+      home: const MyHomePage(title: ''),
     );
   }
 }
@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 "Notes",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
             ),
             Expanded(

@@ -10,14 +10,15 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  final textController = TextEditingController();
+  final titleController = TextEditingController();
+  final contentController = TextEditingController();
   final List<Color> colors = [
-    const Color(0xFFE1BEE7),
-    const Color(0xFFE0F2F1),
-    const Color(0xFFE1F5FE),
+    const Color(0xFFE1BEE7), 
+    const Color(0xFFE0F2F1), 
+    const Color(0xFFE1F5FE), 
     const Color(0xFFFFF9C4), 
-    const Color(0xFFFFEBEE),
-    const Color(0xFFD7CCC8),
+    const Color(0xFFFFEBEE), 
+    const Color(0xFFD7CCC8), 
   ];
 
   Color selectedColor = const Color(0xFFE1BEE7);
@@ -25,29 +26,49 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Note")),
+      appBar: AppBar(title: const Text("New Note"), elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              controller: textController,
+              controller: titleController,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               decoration: const InputDecoration(
-                labelText: "Note title",
-                border: OutlineInputBorder(),
+                hintText: "Write a title...",
+                border: InputBorder.none,
               ),
             ),
-            const SizedBox(height: 20),
-            const Text("Choose color:"),
             const SizedBox(height: 10),
+            Expanded(
+              child: TextField(
+                controller: contentController,
+                maxLines: null,
+                style: const TextStyle(fontSize: 18),
+                decoration: const InputDecoration(
+                  hintText: "Write a note...",
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+
+            const Divider(),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                "Choose Note Color:",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: colors.map((color) {
                 return GestureDetector(
                   onTap: () => setState(() => selectedColor = color),
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    width: 45,
+                    height: 45,
                     decoration: BoxDecoration(
                       color: color,
                       shape: BoxShape.circle,
@@ -57,25 +78,51 @@ class _AddPageState extends State<AddPage> {
                             : Colors.transparent,
                         width: 2,
                       ),
+                      boxShadow: [
+                        if (selectedColor == color)
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                      ],
                     ),
                   ),
                 );
               }).toList(),
             ),
-            const Spacer(),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (textController.text.isNotEmpty) {
-                  Navigator.of(
-                    context,
-                  ).pop(Note(title: textController.text, color: selectedColor));
+                if (titleController.text.isNotEmpty) {
+                  Navigator.of(context).pop(
+                    Note(
+                      title: titleController.text,
+                      content: contentController.text.isEmpty
+                          ? null
+                          : contentController.text,
+                      color: selectedColor,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Add a title to the note.")),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 55),
                 backgroundColor: selectedColor,
+                foregroundColor: Colors.black87,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 2,
               ),
-              child: const Text('Save'),
+              child: const Text(
+                "Save",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
             ),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'addPage.dart';
+import 'viewNotePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,10 +18,11 @@ class MyApp extends StatelessWidget {
 }
 
 class Note {
-  final String title;
-  final Color color;
+  String title;
+  String? content;
+  Color color;
 
-  Note({required this.title, required this.color});
+  Note({required this.title, this.content, required this.color});
 }
 
 class MyHomePage extends StatefulWidget {
@@ -98,17 +100,38 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 itemCount: notes.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: notes[index].color,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      notes[index].title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                  return GestureDetector(
+                    onTap: () => _viewNote(context, index),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: notes[index].color,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            notes[index].title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 5),
+                          if (notes[index].content != null)
+                            Text(
+                              notes[index].content!,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.6),
+                                fontSize: 14,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
                       ),
                     ),
                   );
@@ -126,5 +149,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  void _viewNote(BuildContext context, int index) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => ViewNotePage(note: notes[index])),
+    );
+    if (result == 'delete') {
+      setState(() {
+        notes.removeAt(index);
+      });
+    }
   }
 }
